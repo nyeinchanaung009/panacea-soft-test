@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
+
+:root{
+    --accent : #4f61da;
+    /* --accent : #5362c9; */
+
+    --primary_bg : #ffffff;
+    --secondary_bg : #e8ecf6;
+
+    --primary_text : #192d5e;
+}
+
+html.dark{
+    --accent : #5060c9;
+    /* --accent : #4255d1; */
+
+    /* --primary_bg : #171b30;
+    --secondary_bg : #1f2540; */
+
+    --primary_bg : #14192e;
+    --secondary_bg : #1f2540;
+    
+    --primary_text : #dee9f8;
+}
