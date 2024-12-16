@@ -47,7 +47,13 @@ const confirmDelete = async () => {
 
     if (response.data.success) {
         showConfirmDelete.value = false;
-        itemsData.value.data = itemsData.value.data.filter((item) => item.id != itemToDelete.value);
+
+        // itemsData.value.data = itemsData.value.data.filter((item) => item.id != itemToDelete.value);
+        
+        const itemIndex = itemsData.value.data.findIndex(item => item.id === itemToDelete.value);
+        if (itemIndex !== -1) {
+            itemsData.value.data.splice(itemIndex, 1); // Remove item from the list
+        }
         itemToDelete.value = null;
     }
   } catch (error) {

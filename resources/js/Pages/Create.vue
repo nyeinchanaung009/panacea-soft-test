@@ -16,7 +16,7 @@ const form = useForm({
     name: '',
     category_id: '',
     price: null,
-    description: '',
+    description: ' ',
     condition: '',
     type: '',
     is_publish: true,
@@ -32,6 +32,7 @@ const handleFileChange = (event) => {
 
 
 const submit = () => {
+    // console.log(form);
     form.post(route('item.store'), {
         forceFormData: true,
         onSuccess: () => {
@@ -120,6 +121,7 @@ const submit = () => {
                                 <span class="text-red-500 translate-y-1 text-lg">*</span>
                             </div>
                             <textarea v-model="form.description" class="w-full border-gray-300 rounded" rows="3"></textarea>
+                            <!-- <TextEditor class="bg-white rounded p-3 h-[25px] mt-1" /> -->
                             <InputError class="-mt-1" :message="form.errors.description" />
                         </div>
 

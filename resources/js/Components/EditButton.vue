@@ -5,6 +5,7 @@ import Pen from '@/Components/icons/Pen.vue';
 defineProps({
     id : Number,
 });
+
 </script>
 
 <template>

@@ -14,17 +14,17 @@ const { item, categories } = defineProps({
 });
 
 const form = useForm({
-    name: item.name ? item.name : '',
-    category_id: item.category_id ? item.category_id : '',
-    price: item.price ? item.price : '',
-    description: item.description ? item.description : '',
-    condition: item.condition ? item.condition : '',
-    type: item.type ? item.type : '',
-    is_publish: item.is_publish ? item.is_publish : '',
+    name: item.name,
+    category_id: item.category_id,
+    price: item.price,
+    description: item.description,
+    condition: item.condition,
+    type: item.type,
+    is_publish: item.is_publish,
     image: null,
-    owner: item.owner ? item.owner : '',
-    phone: item.phone ? item.phone : '',
-    address : item.address ? item.address : ''
+    owner: item.owner,
+    phone: item.phone,
+    address : item.address
 });
 
 const handleFileChange = (event) => {
@@ -35,7 +35,7 @@ const handleFileChange = (event) => {
 const submit = () => {
     console.log(form);
     form.put(route('item.update',item.id), {
-        forceFormData: false,
+        forceFormData: true,
         onSuccess: () => {
             form.reset();
         },

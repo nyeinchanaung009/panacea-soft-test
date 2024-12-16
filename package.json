@@ -20,7 +20,6 @@
         "vue": "^3.3.13"
     },
     "dependencies": {
-        "leaflet-locationpicker": "^0.3.4",
-        "quill": "^2.0.3"
+        "@vueup/vue-quill": "^1.2.0"
     }
 }
