@@ -15,20 +15,32 @@ defineProps({
 const form = useForm({
     name: '',
     category_id: '',
-    price: '',
+    price: null,
     description: '',
     condition: '',
     type: '',
-    is_publish: '',
-    image: '',
+    is_publish: true,
+    image: null,
     owner: '',
     phone: '',
     address : ''
 });
 
+const handleFileChange = (event) => {
+  form.image = event.target.files[0];
+};
+
+
 const submit = () => {
-    console.log(form);
-    form.post(route('item.store'));
+    form.post(route('item.store'), {
+        forceFormData: true,
+        onSuccess: () => {
+            form.reset();
+        },
+        onError: (errors) => {
+            console.error(errors);
+        },
+    });
 };
 
 </script>
@@ -156,7 +168,7 @@ const submit = () => {
                             </div>
                             <p class="text-gray-600 dark:text-gray-400 text-xs">Recommended Size 400 x 200</p>
                             <!-- drag and drop -->
-                             <input class="mt-3" type="file" :value="form.image" />
+                             <input @change="handleFileChange" class="mt-3" type="file" />
                             <InputError class="-mt-1" :message="form.errors.image" />
                         </div>
                     </div>
@@ -206,7 +218,7 @@ const submit = () => {
                     </div>
                 </div>
                 <div class="flex justify-end items-center gap-6 mr-5 mt-3">
-                    <button type="button">Cancel</button>
+                    <Link :href="route('dashboard')">Cancel</Link>
                     <button @click="submit" type="submit" class="bg-theme text-white font-bold text-lg px-3 py-1 rounded">Save</button>
                 </div>
              </form>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Item;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,7 +17,7 @@ class ItemController extends Controller
             $row = 10;
         }
 
-        $items = Item::with('category')->paginate((int) $row)->withQueryString();
+        $items = Item::with('category')->latest()->paginate((int) $row)->withQueryString();
         return Inertia::render('Dashboard',[
             'items' => $items,
             'row' => $row
@@ -35,41 +36,44 @@ class ItemController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required',
+            'category_id' => 'required',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'condition' => 'required|string|max:50',
             'type' => 'required|string|max:50',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
             'owner' => 'required|string|max:255',
             'phone' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:255',
         ]);
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('items', 'public');
+        try{
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('items', 'public');
+            }
+
+            $item = Item::create([
+                'name' => request('name'),
+                'description' => request('description'),
+                'address' => request('address') ?? null,
+                'owner' => request('owner'),
+                'phone' => request('phone') ?? null,
+                'type' => request('type'),
+                'condition' =>  request('condition'),
+                'image' => $imagePath,
+                'price' => request('price'),
+                'category_id' => request('category_id'),
+                'is_publish' => request('is_publish') ?? false,
+            ]);
+            return redirect()->route('dashboard')->with('success', 'Item successfully created.');
+        }catch(Exception $e){
+            return back();
         }
+        
 
-        $item = Item::create([
-            'name' => $request('name'),
-            'description' => $request('description'),
-            'address' => $request('address') ?? null,
-            'owner' => $request('owner'),
-            'phone' => $request('phone') ?? null,
-            'type' => $request('type'),
-            'condition' =>  $request('condition'),
-            'image' => $imagePath,
-            'price' => $request('price'),
-            'category_id' => $request('category_id'),
-            'is_publish' => $validated['is_publish'] ?? false,
-        ]);
 
-        // return response()->json([
-        //     'message' => 'Item successfully created.',
-        //     'item' => $item,
-        // ], 201);
-        return redirect('/');
+        // return redirect('/');
     }
 
     public function makePublish(Request $request){

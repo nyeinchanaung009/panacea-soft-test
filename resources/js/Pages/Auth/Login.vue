@@ -1,12 +1,14 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import Eye from '@/Components/icons/Eye.vue';
+import EyeSlash from '@/Components/icons/EyeSlash.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -18,6 +20,8 @@ const form = useForm({
     password: '',
     remember: false,
 });
+
+const showPassword = ref(false);
 
 const submit = () => {
     form.transform(data => ({
@@ -55,26 +59,32 @@ const submit = () => {
                         id="email"
                         v-model="form.email"
                         class="mt-1 block w-full"
+                        type="email"
                         required
                         autofocus
                         autocomplete="username"
-                        inputType="email"
-                        placeholder_name="x x x @gmail.com"
+                        placeholder_name="enter email"
                     />
                     <InputError class="mt-2" :message="form.errors.email" />
                 </div>
 
                 <div class="mt-4">
                     <InputLabel for="password" value="Password" />
-                    <TextInput
+                    <div class="relative">
+                        <TextInput
                         id="password"
                         v-model="form.password"
                         class="mt-1 block w-full"
+                        :type="showPassword ? 'text' : 'password'"
                         required
                         autocomplete="current-password"
-                        inputType="password"
-                        placeholder_name=""
-                    />
+                        placeholder_name="enter password"
+                        />
+                        <button type="button" @click="showPassword = !showPassword" class="hover:opacity-80 rounded-full p-2 absolute right-[8px] top-1 text-lg text-gray-500 dark:text-gray-700">
+                            <component :is="showPassword ? Eye : EyeSlash" />
+                        </button>
+                    </div>
+                    
                     <InputError class="mt-2" :message="form.errors.password" />
                 </div>
 
