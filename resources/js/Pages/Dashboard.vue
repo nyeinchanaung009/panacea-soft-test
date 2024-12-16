@@ -1,6 +1,6 @@
 <script setup>
 import {Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import AddButton from '@/Components/AddButton.vue';
 import EditButton from '@/Components/EditButton.vue';
@@ -8,11 +8,12 @@ import DeleteButton from '@/Components/DeleteButton.vue';
 import ChevronDown from '@/Components/icons/ChevronDown.vue';
 import Trash from '@/Components/icons/Trash.vue';
 
-defineProps({
+const props = defineProps({
     items: Object,
     row : Number
 });
 
+const itemsData = ref(props.items);
 const showConfirmDelete = ref(false);
 const itemToDelete = ref(null);
 
@@ -46,7 +47,8 @@ const confirmDelete = async () => {
 
     if (response.data.success) {
         showConfirmDelete.value = false;
-        window.location.href = 'http://localhost:8000/';
+        itemsData.value.data = itemsData.value.data.filter((item) => item.id != itemToDelete.value);
+        itemToDelete.value = null;
     }
   } catch (error) {
     //
@@ -74,10 +76,10 @@ const parentOnDelete = (event) => {
             <p class="text-xl leading-5 font-bold">Confirm Delete</p>
             <span class="text-gray-500 dark:text-gray-400 text-sm">Are you sure to delete ?</span>
             <div class="flex justify-center gap-4 mt-7">
-                <button @click="cancelDelete" class="bg-secondary_bg dark:bg-slate-700 text-gray-500 dark:text-gray-400 px-4 py-1 rounded hover:bg-slate-300 dark:hover:bg-slate-600">
+                <button @click="cancelDelete" class="active:scale-[0.95] duration-[200] bg-secondary_bg dark:bg-slate-700 text-gray-500 dark:text-gray-400 px-4 py-1 rounded hover:bg-slate-300 dark:hover:bg-slate-600">
                     Cancel
                 </button>
-                <button @click="confirmDelete" class="text-white bg-red-500/90 px-4 py-1 rounded shadow hover:opacity-90">
+                <button @click="confirmDelete" class="active:scale-[0.95] duration-[200] text-white bg-red-500/90 px-4 py-1 rounded shadow hover:opacity-90">
                     Delete
                 </button>
             </div>
@@ -100,7 +102,7 @@ const parentOnDelete = (event) => {
             <div class="mt-5">
                 <div class="flex w-fit gap-3 text-gray-700 dark:text-gray-400 cursor-pointer group">
                     <span class="font-bold">Show : </span>
-                    <div class="relative w-[120px] text-center border border-gray-400 dark:border-gray-600 py-1 rounded-md text-sm">
+                    <div class="relative z-20    w-[120px] text-center border border-gray-400 dark:border-gray-600 py-1 rounded-md text-sm">
                         <div class="flex justify-evenly items-center">
                             <span>{{ row }} rows</span>
                             <ChevronDown />
@@ -144,15 +146,15 @@ const parentOnDelete = (event) => {
                         </tr>
                     </thead>
                     <tbody class="text-primary_text text-[14.5px]">
-                        <tr v-for="(item,index) in items.data" :key="item.id" class="border-b border-slate-300 dark:border-slate-600">
+                        <tr v-for="(item,index) in itemsData.data" :key="item.id" class="border-b border-slate-300 dark:border-slate-600">
                             <td class="ps-12 pe-3 py-3">
                                 <div>
-                                    <EditButton />
-                                    <DeleteButton @click="deleteItem(item.id)" />
+                                    <EditButton :id="item.id"  />
+                                    <DeleteButton @click="deleteItem(item.id)" class="mt-1 lg:mt-0" />
                                 </div>
                             </td>
                             <td class="px-3 py-3">
-                                {{ items.from + index }}
+                                {{ itemsData.from + index }}
                             </td>
                             <td class="px-3 py-3">
                                 {{ item.name }}
@@ -172,7 +174,7 @@ const parentOnDelete = (event) => {
                             <td class="px-3 py-3">
                                 <!-- switch -->
                                  <div @click="publishToggle(item)" :class="item.is_publish ? 'bg-theme' : 'bg-gray-400'" class="relative w-[34px] h-[18px] rounded-full cursor-pointer">
-                                    <div :class="item.is_publish ? 'translate-x-[85%]' : 'translate-x-0'" class="absolute top-0 w-[18px] h-[18px] rounded-full bg-gray-100 border border-gray-400 dark:border-gray-500 duration-300">
+                                    <div :class="item.is_publish ? 'translate-x-[85%]' : 'translate-x-0'" class="absolute top-0 w-[18px] h-[18px] hover:opacity-80 rounded-full bg-gray-100 border border-gray-400 dark:border-gray-500 duration-300">
                                     </div>
                                  </div>
                             </td>
@@ -182,12 +184,12 @@ const parentOnDelete = (event) => {
             </div>
 
             <!-- pagination -->
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 pb-12 pe-3">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 pb-12 pe-3 md:px-5 lg:px-8">
                 <div class="text-gray-600 dark:text-gray-400 text-[15px]">
-                     Showing {{ items.from }} to {{ items.to }} of {{ items.total }} entries
+                     Showing {{ itemsData.from }} to {{ itemsData.to }} of {{ itemsData.total }} entries
                 </div>
                 <div class="flex justify-center items-center gap-2">
-                    <Link v-for="link in items.links" :key="link.url" :href="link.url" :class="link.active ? 'bg-theme text-white' : 'bg-primary_bg text-primary_text border border-gray-300 dark:border-gray-700'" class="px-[10px] py-[2px] shadow" v-html="filterLabel(link.label)" />
+                    <Link v-for="link in itemsData.links" :key="link.url" :href="link.url" :class="link.active ? 'bg-theme text-white' : 'bg-primary_bg text-primary_text border border-gray-300 dark:border-gray-700'" class="px-[10px] py-[2px] shadow" v-html="filterLabel(link.label)" />
                 </div>
             </div>
         </div>

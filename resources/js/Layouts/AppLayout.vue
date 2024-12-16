@@ -41,7 +41,7 @@ const logout = () => {
                     </div>
                     <div class="mt-9">
                         <!-- navlink -->
-                        <Link :href="route('dashboard')" :class="route().current() == 'dashboard' ? 'bg-theme text-white' : 'bg-white text-primary_text'" class="flex justify-start items-center gap-3 w-full px-4 py-[10px] rounded-md shadow-sm hover:opacity-90">
+                        <Link :href="route('dashboard')" :class="route().current() == 'dashboard' || 'item' ? 'bg-theme text-white' : 'bg-white text-primary_text'" class="flex justify-start items-center gap-3 w-full px-4 py-[10px] rounded-md shadow-sm hover:opacity-90">
                             <Grid class="text-lg"/>
                             Items
                         </Link>

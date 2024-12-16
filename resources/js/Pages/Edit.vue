@@ -8,22 +8,23 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 // import LocationPicker from '@/Components/LocationPicker.vue';
 
-defineProps({
+const { item, categories } = defineProps({
+    item: Object,
     categories: Object,
 });
 
 const form = useForm({
-    name: '',
-    category_id: '',
-    price: null,
-    description: '',
-    condition: '',
-    type: '',
-    is_publish: true,
+    name: item.name ? item.name : '',
+    category_id: item.category_id ? item.category_id : '',
+    price: item.price ? item.price : '',
+    description: item.description ? item.description : '',
+    condition: item.condition ? item.condition : '',
+    type: item.type ? item.type : '',
+    is_publish: item.is_publish ? item.is_publish : '',
     image: null,
-    owner: '',
-    phone: '',
-    address : ''
+    owner: item.owner ? item.owner : '',
+    phone: item.phone ? item.phone : '',
+    address : item.address ? item.address : ''
 });
 
 const handleFileChange = (event) => {
@@ -32,8 +33,9 @@ const handleFileChange = (event) => {
 
 
 const submit = () => {
-    form.post(route('item.store'), {
-        forceFormData: true,
+    console.log(form);
+    form.put(route('item.update',item.id), {
+        forceFormData: false,
         onSuccess: () => {
             form.reset();
         },
@@ -52,12 +54,12 @@ const submit = () => {
             <div class="flex gap-3 items-center">
                 <Link :href="route('dashboard')" class="text-sm text-gray-600 dark:text-gray-400 font-bold">Items List</Link>
                 <ChevronRight class="text-sm" />
-                <Link :href="route('item.create')" class="text-sm text-theme font-bold">Add Items</Link>
+                <Link :href="route('item.edit',item.id)" class="text-sm text-theme font-bold">Update Items</Link>
             </div>
 
             <!-- title -->
             <div class="bg-secondary_bg rounded mt-6 px-4 py-2 mb-3">
-                <p class="font-semibold text-primary_text">Add Items</p>
+                <p class="font-semibold text-primary_text">Update Items</p>
             </div>
 
             <!-- form -->
@@ -217,9 +219,9 @@ const submit = () => {
                         <!-- <LocationPicker/> -->
                     </div>
                 </div>
-                <div class="flex justify-end items-center gap-6 mr-5 mt-3 md:pe-7">
+                <div class="flex justify-end items-center gap-6 mr-5 mt-3">
                     <Link :href="route('dashboard')" class="px-6 py-[6px] rounded hover:bg-secondary_bg active:scale-[0.95] duration-300">Cancel</Link>
-                    <button @click="submit" type="submit" class="bg-theme text-white px-6 py-[6px] rounded active:scale-[0.95] duration-300">Save</button>
+                    <button @click="submit" type="submit" class="bg-theme text-white px-6 py-[6px] rounded active:scale-[0.95] duration-300">Update</button>
                 </div>
              </form>
             

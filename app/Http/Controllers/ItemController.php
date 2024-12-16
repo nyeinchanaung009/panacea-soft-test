@@ -7,6 +7,7 @@ use App\Models\Item;
 use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -32,8 +33,7 @@ class ItemController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required',
@@ -53,7 +53,7 @@ class ItemController extends Controller
                 $imagePath = $request->file('image')->store('items', 'public');
             }
 
-            $item = Item::create([
+            Item::create([
                 'name' => request('name'),
                 'description' => request('description'),
                 'address' => request('address') ?? null,
@@ -70,10 +70,48 @@ class ItemController extends Controller
         }catch(Exception $e){
             return back();
         }
-        
+    }
 
+    public function edit(Item $item){
+        $categories = Category::all();
+        return Inertia::render('Edit',[
+            'item' => $item,
+            'categories' => $categories,
+        ]);
+    }
 
-        // return redirect('/');
+    public function update(Request $request,Item $item){
+        // dd($request);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'condition' => 'required|string|max:50',
+            'type' => 'required|string|max:50',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'owner' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        try{
+            if ($request->hasFile('image')) {
+                if ($item->image) {
+                    Storage::delete('items/' . $item->image);
+                }
+                $validated['image'] = $request->file('image')->store('items', 'public');
+            }
+
+            $item->update($validated);
+
+            return redirect()->route('dashboard')->with('success', 'Item successfully updated.');
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     public function makePublish(Request $request){
@@ -93,6 +131,9 @@ class ItemController extends Controller
 
     public function destroy(Item $item){
         $item->delete();
+        if ($item->image) {
+            Storage::delete('items/' . $item->image);
+        }
         return response()->json([
             'success' => true,
             'message' => 'Item deleted successfully.'
