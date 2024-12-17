@@ -4,13 +4,18 @@ import {Link,useForm } from '@inertiajs/vue3';
 import ChevronRight from '@/Components/icons/ChevronRight.vue';
 // import TextEditor from '@/Components/TextEditor.vue';
 import LocationPicker from '@/Components/LocationPicker.vue';
+// import Filepond from '@/Components/Filepond.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import PreviewImg from '@/Components/PreviewImg.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { ref } from 'vue';
 
 defineProps({
     categories: Object,
 });
+
+const selectedImg = ref(null);
 
 const form = useForm({
     name: '',
@@ -28,6 +33,12 @@ const form = useForm({
 
 const handleFileChange = (event) => {
   form.image = event.target.files[0];
+
+  if(event.target.files.length > 0){
+        selectedImg.value = URL.createObjectURL(event.target.files[0]);
+  }else{
+        selectedImg.value = null;
+  }
 };
 
 
@@ -195,7 +206,9 @@ const submit = () => {
                             </div>
                             <p class="text-gray-600 text-xs">Recommended Size 400 x 200</p>
                             <!-- drag and drop -->
-                             <input @change="handleFileChange" class="mt-3" type="file" />
+                             <!-- <Filepond /> -->
+                             <input id="image" @change="handleFileChange" class="mt-3 hidden" type="file" />
+                            <PreviewImg :selectedImg="selectedImg" />
                             <InputError class="-mt-1" :message="form.errors.image" />
                         </div>
                     </div>
@@ -226,7 +239,7 @@ const submit = () => {
                             <TextInput
                                 id="phone"
                                 v-model="form.phone"
-                                type="text"
+                                type="number"
                                 class="block w-full"
                                 required
                                 autocomplete="off"
@@ -244,9 +257,10 @@ const submit = () => {
                         <!-- <LocationPicker/> -->
                     </div>
                 </div>
-                <div class="flex justify-end items-center gap-6 mr-5 mt-3 md:pe-7">
-                    <Link :href="route('dashboard')" class="px-6 py-[6px] rounded hover:bg-secondary_bg active:scale-[0.95] duration-300">Cancel</Link>
-                    <button @click="submit" type="submit" class="bg-theme text-white px-6 py-[6px] rounded active:scale-[0.95] duration-300">Save</button>
+
+                <div class="flex justify-end items-center gap-6 mr-5 mt-7 md:pe-12">
+                    <Link :href="route('dashboard')" class="px-10 py-[6px] rounded hover:bg-secondary_bg active:scale-[0.95] duration-300">Cancel</Link>
+                    <button @click="submit" type="submit" class="bg-theme text-white px-10 py-[6px] rounded active:scale-[0.95] duration-300">Save</button>
                 </div>
              </form>
             

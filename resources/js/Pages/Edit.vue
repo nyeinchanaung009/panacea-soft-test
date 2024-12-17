@@ -7,30 +7,16 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import LocationPicker from '@/Components/LocationPicker.vue';
-import { onMounted, ref, watch } from 'vue';
+import PreviewImg from '@/Components/PreviewImg.vue';
+import { ref } from 'vue';
+
 
 const { item, categories } = defineProps({
     item: Object,
     categories: Object,
 });
 
-// const form = useForm({
-//     name : '',
-//     category_id : '',
-//     price : '',
-//     description : '',
-//     condition : '',
-//     type : '',
-//     is_publish : '',
-//     image : null,
-//     owner : '',
-//     phone : '',
-//     address : '',
-// });
-
-
-// const file = ref(null);
-const existingImage = item.image;
+const selectedImg = ref(item.image != null ? '/storage/'+item.image : null);
 
 const form = useForm({
     name : item?.name,
@@ -48,63 +34,38 @@ const form = useForm({
 
 const handleFileChange = (event) => {
   form.image = event.target.files[0];
-  console.log(form.image);
+  
+  if(event.target.files.length > 0){
+        selectedImg.value = URL.createObjectURL(event.target.files[0]);
+  }else{
+        selectedImg.value = null;
+  }
 };
 
-// watch('form.nae', (value) => {
-//     if(value){
-//         form.clearErrors('title');
-//     }
-// })
 
 const submit = () => {
 
     const formData = new FormData();
-    // formData.append('_method', 'PATCH');
-    formData.append('name', form.name);
-    formData.append('category_id', form.category_id);
-    formData.append('price', form.price);
-    formData.append('description', form.description);
-    formData.append('condition', form.condition);
-    formData.append('type', form.type);
-    formData.append('is_publish', form.is_publish);
-    formData.append('owner', form.owner);
-    formData.append('phone', form.phone);
-    formData.append('address', form.address);
-    if (form.image) {
-        formData.append('image', form.image);
-    }
+    // formData.append('name', form.name);
+    // formData.append('category_id', form.category_id);
+    // formData.append('price', form.price);
+    // formData.append('description', form.description);
+    // formData.append('condition', form.condition);
+    // formData.append('type', form.type);
+    // formData.append('is_publish', form.is_publish);
+    // formData.append('owner', form.owner);
+    // formData.append('phone', form.phone);
+    // formData.append('address', form.address);
+    // if (form.image) {
+    //     formData.append('image', form.image);
+    // }
 
-    console.log([...formData.entries()]); 
+    // console.log([...formData.entries()]); 
     
     form.post(route('item.update',item.id), {
-        // data: formData,
-        // forceFormData: true,
         onSuccess: () => console.log('Form updated successfully'),
         onError: (errors) => console.error('Errors:', errors),
     });
-    // form.put(route('item.update',item.id), {
-    //     data: formData,
-    //     onProgress: (progress) => {
-    //     console.log(progress.percentage); // Log upload progress
-    //     },
-    //     onSuccess: () => {
-    //     console.log('File uploaded successfully!');
-    //     },
-    //     onError: (errors) => {
-    //     console.error(errors);
-    //     },
-    // });
-
-    // form.put(route('item.update',item.id), {
-    //     forceFormData: true,
-    //     onSuccess: () => {
-    //         form.reset();
-    //     },
-    //     onError: (errors) => {
-    //         console.error(errors);
-    //     },
-    // });
 };
 
 </script>
@@ -232,14 +193,11 @@ const submit = () => {
                             </div>
                             <p class="text-gray-600 text-xs">Recommended Size 400 x 200</p>
                             <!-- drag and drop -->
-                             <input @change="handleFileChange" class="mt-3" type="file" />
+                             <input id="image" @change="handleFileChange" class="mt-3 hidden" type="file" />
                             <InputError class="-mt-1" :message="form.errors.image" />
                         </div>
 
-                        <div>
-                            <img class="w-[200px] border border-gray-400 mt-2 rounded" v-if="existingImage" :src="'/storage/'+existingImage" alt="img" />
-                            <div v-else>no image</div>
-                        </div>
+                        <PreviewImg :selectedImg="selectedImg" />
                     </div>
                     <!-- owner information -->
                     <div class="w-full md:w-6/12 p-2">
@@ -268,8 +226,8 @@ const submit = () => {
                             <TextInput
                                 id="phone"
                                 v-model="form.phone"
-                                type="text"
-                                class="block w-full"
+                                type="number"
+                                class="block w-full mt-2"
                                 required
                                 autocomplete="off"
                             />
@@ -286,9 +244,10 @@ const submit = () => {
                         <!-- <LocationPicker/> -->
                     </div>
                 </div>
-                <div class="flex justify-end items-center gap-6 mr-5 mt-3">
-                    <Link :href="route('dashboard')" class="px-6 py-[6px] rounded hover:bg-secondary_bg active:scale-[0.95] duration-300">Cancel</Link>
-                    <button @click="submit" type="submit" class="bg-theme text-white px-6 py-[6px] rounded active:scale-[0.95] duration-300">Update</button>
+
+                <div class="flex justify-end items-center gap-6 mr-5 mt-7 pe-12">
+                    <Link :href="route('dashboard')" class="px-10 py-[6px] rounded hover:bg-secondary_bg active:scale-[0.95] duration-300">Cancel</Link>
+                    <button @click="submit" type="submit" class="bg-theme text-white px-10 py-[6px] rounded active:scale-[0.95] duration-300">Update</button>
                 </div>
              </form>
             

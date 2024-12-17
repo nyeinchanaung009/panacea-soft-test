@@ -73,7 +73,7 @@ const logout = () => {
                 </div>
 
                 <!-- footer -->
-                <footer class="py-3 bg-secondary_bg text-center">
+                <footer class="py-3 bg-secondary_bg text-center text-sm">
                     <a class="text-slate-600 p-1" target="_blank" href="https://nyeinchanaung009.pages.dev">
                         Developed by Nyein Chan Aung | 
                         <span class="text-theme font-bold">Portfolio</span>

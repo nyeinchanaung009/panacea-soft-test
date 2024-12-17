@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('price');
             $table->string('owner');
             $table->boolean('is_publish');
-            $table->string('phone')->nullable();
+            $table->integer('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('image')->nullable();
             $table->enum('condition',['new','second hand','display','damaged']);

@@ -43,7 +43,7 @@ class ItemController extends Controller
             'type' => 'required|string|max:50',
             'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
             'owner' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'nullable|numeric',
             'address' => 'nullable|string|max:255',
         ]);
 
@@ -91,7 +91,7 @@ class ItemController extends Controller
             'type' => 'required|string|max:50',
             'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
             'owner' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'nullable|numeric',
             'address' => 'nullable|string|max:255',
         ]);
 
@@ -109,8 +109,6 @@ class ItemController extends Controller
 
             if ($request->hasFile('image')) {
                 if ($item->image){
-                    // Storage::delete('items/' . $item->image);
-                    // Storage::disk('public')->delete('items/' . $item->image);
                     $filePath = storage_path('app/public/' . $item->image);
                     unlink($filePath);
                 }
