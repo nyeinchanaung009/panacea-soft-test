@@ -81,8 +81,8 @@ class ItemController extends Controller
     }
 
     public function update(Request $request,Item $item){
-        // dd($request);
-        $validated = $request->validate([
+        // dd($request->all());
+        $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required',
             'price' => 'required|numeric|min:0',
@@ -96,14 +96,28 @@ class ItemController extends Controller
         ]);
 
         try{
+
+            $item->name = request('name');
+            $item->category_id = request('category_id');
+            $item->price = request('price');
+            $item->description = request('description');
+            $item->condition = request('condition');
+            $item->type = request('type');
+            $item->owner = request('owner');
+            $item->phone = request('phone');
+            $item->address = request('address');
+
             if ($request->hasFile('image')) {
-                if ($item->image) {
-                    Storage::delete('items/' . $item->image);
+                if ($item->image){
+                    // Storage::delete('items/' . $item->image);
+                    // Storage::disk('public')->delete('items/' . $item->image);
+                    $filePath = storage_path('app/public/' . $item->image);
+                    unlink($filePath);
                 }
-                $validated['image'] = $request->file('image')->store('items', 'public');
+                $item->image = $request->file('image')->store('items', 'public');
             }
 
-            $item->update($validated);
+            $item->save();
 
             return redirect()->route('dashboard')->with('success', 'Item successfully updated.');
         }catch(Exception $e){

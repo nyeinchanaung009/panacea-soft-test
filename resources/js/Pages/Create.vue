@@ -32,15 +32,41 @@ const handleFileChange = (event) => {
 
 
 const submit = () => {
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('category_id', form.category_id);
+    formData.append('price', form.price);
+    formData.append('description', form.description);
+    formData.append('condition', form.condition);
+    formData.append('type', form.type);
+    formData.append('is_publish', form.is_publish);
+    formData.append('image', form.image);
+    formData.append('owner', form.owner);
+    formData.append('phone', form.phone);
+    formData.append('address', form.address);
+
     form.post(route('item.store'), {
-        forceFormData: true,
-        onSuccess: () => {
-            form.reset();
-        },
-        onError: (errors) => {
-            console.error(errors);
-        },
-    });
+    data: formData,
+    onProgress: (progress) => {
+      console.log(progress.percentage); // Log upload progress
+    },
+    onSuccess: () => {
+      console.log('File uploaded successfully!');
+    },
+    onError: (errors) => {
+      console.error(errors);
+    },
+  });
+
+    // form.post(route('item.store'), {
+    //     forceFormData: true,
+    //     onSuccess: () => {
+    //         form.reset();
+    //     },
+    //     onError: (errors) => {
+    //         console.error(errors);
+    //     },
+    // });
 };
 
 </script>
@@ -121,7 +147,6 @@ const submit = () => {
                             </div>
                             <textarea v-model="form.description" class="w-full border-gray-300 rounded" rows="3"></textarea>
                             <!-- <TextEditor v-model="form.description" /> -->
-                            <!-- class="bg-white rounded p-3 h-[25px] mt-1" -->
                             <InputError class="-mt-1" :message="form.errors.description" />
                         </div>
 

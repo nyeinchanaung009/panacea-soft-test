@@ -7,42 +7,104 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import LocationPicker from '@/Components/LocationPicker.vue';
+import { onMounted, ref, watch } from 'vue';
 
 const { item, categories } = defineProps({
     item: Object,
     categories: Object,
 });
 
+// const form = useForm({
+//     name : '',
+//     category_id : '',
+//     price : '',
+//     description : '',
+//     condition : '',
+//     type : '',
+//     is_publish : '',
+//     image : null,
+//     owner : '',
+//     phone : '',
+//     address : '',
+// });
+
+
+// const file = ref(null);
+const existingImage = item.image;
+
 const form = useForm({
-    name: item.name,
-    category_id: item.category_id,
-    price: item.price,
-    description: item.description,
-    condition: item.condition,
-    type: item.type,
-    is_publish: item.is_publish,
-    image: null,
-    owner: item.owner,
-    phone: item.phone,
-    address : item.address
+    name : item?.name,
+    category_id : item?.category_id,
+    price : item?.price,
+    description : item?.description,
+    condition : item?.condition,
+    type : item?.type,
+    is_publish : item?.is_publish,
+    image : null,
+    owner : item?.owner,
+    phone : item?.phone,
+    address : item?.address
 });
 
 const handleFileChange = (event) => {
   form.image = event.target.files[0];
+  console.log(form.image);
 };
 
+// watch('form.nae', (value) => {
+//     if(value){
+//         form.clearErrors('title');
+//     }
+// })
 
 const submit = () => {
-    console.log(form);
-    form.put(route('item.update',item.id), {
-        forceFormData: true,
-        onSuccess: () => {
-            form.reset();
-        },
-        onError: (errors) => {
-            console.error(errors);
-        },
+
+    const formData = new FormData();
+    // formData.append('_method', 'PATCH');
+    formData.append('name', form.name);
+    formData.append('category_id', form.category_id);
+    formData.append('price', form.price);
+    formData.append('description', form.description);
+    formData.append('condition', form.condition);
+    formData.append('type', form.type);
+    formData.append('is_publish', form.is_publish);
+    formData.append('owner', form.owner);
+    formData.append('phone', form.phone);
+    formData.append('address', form.address);
+    if (form.image) {
+        formData.append('image', form.image);
+    }
+
+    console.log([...formData.entries()]); 
+    
+    form.post(route('item.update',item.id), {
+        // data: formData,
+        // forceFormData: true,
+        onSuccess: () => console.log('Form updated successfully'),
+        onError: (errors) => console.error('Errors:', errors),
     });
+    // form.put(route('item.update',item.id), {
+    //     data: formData,
+    //     onProgress: (progress) => {
+    //     console.log(progress.percentage); // Log upload progress
+    //     },
+    //     onSuccess: () => {
+    //     console.log('File uploaded successfully!');
+    //     },
+    //     onError: (errors) => {
+    //     console.error(errors);
+    //     },
+    // });
+
+    // form.put(route('item.update',item.id), {
+    //     forceFormData: true,
+    //     onSuccess: () => {
+    //         form.reset();
+    //     },
+    //     onError: (errors) => {
+    //         console.error(errors);
+    //     },
+    // });
 };
 
 </script>
@@ -63,7 +125,7 @@ const submit = () => {
             </div>
 
             <!-- form -->
-             <form  @submit.prevent="submit">
+             <form  @submit.prevent="submit" enctype="multipart/form-data">
                  <div class="flex flex-col md:flex-row justify-start items-start gap-4 md:gap-0">
                     <!-- item information -->
                     <div class="w-full md:w-6/12 p-2">
@@ -172,6 +234,11 @@ const submit = () => {
                             <!-- drag and drop -->
                              <input @change="handleFileChange" class="mt-3" type="file" />
                             <InputError class="-mt-1" :message="form.errors.image" />
+                        </div>
+
+                        <div>
+                            <img class="w-[200px] border border-gray-400 mt-2 rounded" v-if="existingImage" :src="'/storage/'+existingImage" alt="img" />
+                            <div v-else>no image</div>
                         </div>
                     </div>
                     <!-- owner information -->
