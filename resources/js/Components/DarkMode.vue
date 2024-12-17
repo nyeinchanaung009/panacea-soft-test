@@ -31,7 +31,7 @@ onMounted(()=>{
 <template>
     <div>
         <button @click="toggleDarkMode" class="p-2 rounded">
-            <component class="text-2xl text-theme" :is="isDarkMode ? Sun : Moon" />
+            <component :class="isDarkMode ? 'text-white' : 'text-theme'" class="text-2xl" :is="isDarkMode ? Sun : Moon" />
         </button>
     </div>
 </template>

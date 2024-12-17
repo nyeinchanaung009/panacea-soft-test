@@ -1,5 +1,5 @@
 <template>
-    <div class="location-picker">
+    <div class="location-picker relative z-10">
       <!-- Input for showing coordinates -->
       <input
         id="coordinates"

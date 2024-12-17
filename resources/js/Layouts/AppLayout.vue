@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import Banner from '@/Components/Banner.vue';
 import Grid from '@/Components/icons/Grid.vue';
 import Logout from '@/Components/icons/Logout.vue';
 import Menu from '@/Components/icons/Menu.vue';
@@ -24,7 +23,11 @@ const logout = () => {
     <div>
         <Head :title="title" />
 
-        <Banner />
+        <!-- <div v-if="$page.props.flash.message" class="toast absolute z-[30] top-12 w-full flex justify-center items-center">
+            <div class="px-8 py-2 text-white bg-theme rounded">
+                Toaset Message
+            </div>
+        </div> -->
 
         <div class="w-full h-screen flex">
             <!-- side bar -->
@@ -83,3 +86,21 @@ const logout = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+    .toast{
+        animation : popup 0.4s ease-out forwards;
+    }
+
+    @keyframes popup{
+        from{
+            opacity: 0.2;
+            transform: translateY(-40px);
+        }
+        to{
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+</style>

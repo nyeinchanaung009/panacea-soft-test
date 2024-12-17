@@ -24,6 +24,7 @@ Route::middleware([
     Route::get('item/{item}/edit',[ItemController::class,'edit'])->name('item.edit');
     Route::post('item/{item}',[ItemController::class,'update'])->name('item.update');
 
-    Route::delete('/item/{item}', [ItemController::class, 'destroy'])->name('item.destroy');
-    Route::post('/item/make-publish', [ItemController::class, 'makePublish'])->name('item.makePublish');
+    // delete and put method is in error and still figuring out . so,curretly use post methods
+    Route::post('/item/delete/{item}', [ItemController::class, 'destroy'])->name('item.destroy');
+    Route::post('/item/make-publish/{id}', [ItemController::class, 'makePublish'])->name('item.makePublish');
 });

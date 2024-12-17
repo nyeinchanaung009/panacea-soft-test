@@ -69,15 +69,6 @@ const submit = () => {
     },
   });
 
-    // form.post(route('item.store'), {
-    //     forceFormData: true,
-    //     onSuccess: () => {
-    //         form.reset();
-    //     },
-    //     onError: (errors) => {
-    //         console.error(errors);
-    //     },
-    // });
 };
 
 </script>
@@ -87,8 +78,8 @@ const submit = () => {
         <div class="mt-3 pt-4 px-2 md:px-4">
             <!-- breadcrumb -->
             <div class="flex gap-3 items-center">
-                <Link :href="route('dashboard')" class="text-sm text-gray-600 font-bold">Items List</Link>
-                <ChevronRight class="text-sm" />
+                <Link :href="route('dashboard')" class="text-sm text-gray-600 dark:text-gray-400 font-bold">Items List</Link>
+                <ChevronRight class="text-sm text-gray-600 dark:text-gray-400" />
                 <Link :href="route('item.create')" class="text-sm text-theme font-bold">Add Items</Link>
             </div>
 
@@ -204,7 +195,7 @@ const submit = () => {
                                 <InputLabel for="image" value="Item Photo" />
                                 <span class="text-red-500 translate-y-1 text-lg">*</span>
                             </div>
-                            <p class="text-gray-600 text-xs">Recommended Size 400 x 200</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-xs">Recommended Size 400 x 200</p>
                             <!-- drag and drop -->
                              <!-- <Filepond /> -->
                              <input id="image" @change="handleFileChange" class="mt-3 hidden" type="file" />
@@ -253,13 +244,11 @@ const submit = () => {
                             <LocationPicker v-model="form.address" />
                             <InputError class="-mt-1" :message="form.errors.address" />
                         </div>
-
-                        <!-- <LocationPicker/> -->
                     </div>
                 </div>
 
                 <div class="flex justify-end items-center gap-6 mr-5 mt-7 md:pe-12">
-                    <Link :href="route('dashboard')" class="px-10 py-[6px] rounded hover:bg-secondary_bg active:scale-[0.95] duration-300">Cancel</Link>
+                    <Link :href="route('dashboard')" class="px-10 py-[6px] rounded hover:bg-gray-300 active:scale-[0.95] duration-300 bg-secondary_bg text-gray-700 dark:text-gray-300">Cancel</Link>
                     <button @click="submit" type="submit" class="bg-theme text-white px-10 py-[6px] rounded active:scale-[0.95] duration-300">Save</button>
                 </div>
              </form>

@@ -66,9 +66,9 @@ class ItemController extends Controller
                 'category_id' => request('category_id'),
                 'is_publish' => request('is_publish') ?? false,
             ]);
-            return redirect()->route('dashboard')->with('success', 'Item successfully created.');
+            return redirect()->route('dashboard')->with('message',['type' => 'success','text' => 'Item successfully created.']);
         }catch(Exception $e){
-            return back();
+            return back()->with('message',['type' => 'error','text' => 'Item create unsuccessful.']);
         }
     }
 
@@ -117,34 +117,32 @@ class ItemController extends Controller
 
             $item->save();
 
-            return redirect()->route('dashboard')->with('success', 'Item successfully updated.');
+            return redirect()->route('dashboard')->with('message',['type' => 'success','text' => 'Item successfully updated.']);
         }catch(Exception $e){
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ]);
+            return back()->with('message',['type' => 'error','text' => 'Item update unsuccessful.']);
         }
     }
 
-    public function makePublish(Request $request){
-        $validated = $request->validate([
-            'id' => 'required|integer|exists:items,id',
-        ]);
+    public function makePublish($id){
     
-        $item = Item::findOrFail($validated['id']);
+        $item = Item::findOrFail($id);
         $item->is_publish = !$item->is_publish;
         $item->save();
     
-        return response()->json([
-            'success' => true,
-            'message' => 'Item published successfully!',
-        ]);
+        return back()->with('message',['type' => 'success','text' => 'Publish successful.']);
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Item published successfully!',
+        // ]);
     }
 
-    public function destroy(Item $item){
+    public function destroy($id){
+        $item = Item::findOrFail($id);
         $item->delete();
         if ($item->image) {
-            Storage::delete('items/' . $item->image);
+            $filePath = storage_path('app/public/' . $item->image);
+            unlink($filePath);
         }
         return response()->json([
             'success' => true,

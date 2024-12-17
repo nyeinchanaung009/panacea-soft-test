@@ -28,12 +28,11 @@ function filterLabel(label){
 }
 
 const publishToggle = (item) => {
-    axios.post(route('item.makePublish'), {
-        id: item.id,
-    }).then(() => {        
-        item.is_publish = !item.is_publish;
+    item.is_publish = !item.is_publish;
+    axios.post(route('item.makePublish',item.id)).then(() => {    
+        //    
     }).catch(error => {
-        //
+        item.is_publish = !item.is_publish;
     });
 };
 
@@ -44,7 +43,7 @@ const deleteItem = (id) => {
 
 const confirmDelete = async () => {
   try {
-    const response = await axios.delete(route("item.destroy", itemToDelete.value));
+    const response = await axios.post(route("item.destroy", itemToDelete.value));
 
     if (response.data.success) {
         showConfirmDelete.value = false;

@@ -45,22 +45,7 @@ const handleFileChange = (event) => {
 
 const submit = () => {
 
-    const formData = new FormData();
-    // formData.append('name', form.name);
-    // formData.append('category_id', form.category_id);
-    // formData.append('price', form.price);
-    // formData.append('description', form.description);
-    // formData.append('condition', form.condition);
-    // formData.append('type', form.type);
-    // formData.append('is_publish', form.is_publish);
-    // formData.append('owner', form.owner);
-    // formData.append('phone', form.phone);
-    // formData.append('address', form.address);
-    // if (form.image) {
-    //     formData.append('image', form.image);
-    // }
-
-    // console.log([...formData.entries()]); 
+    // const formData = new FormData();
     
     form.post(route('item.update',item.id), {
         onSuccess: () => console.log('Form updated successfully'),
@@ -75,8 +60,8 @@ const submit = () => {
         <div class="mt-3 pt-4 px-2 md:px-4">
             <!-- breadcrumb -->
             <div class="flex gap-3 items-center">
-                <Link :href="route('dashboard')" class="text-sm text-gray-600 font-bold">Items List</Link>
-                <ChevronRight class="text-sm" />
+                <Link :href="route('dashboard')" class="text-sm text-gray-600 dark:text-gray-400 font-bold">Items List</Link>
+                <ChevronRight class="text-sm text-gray-600 dark:text-gray-400" />
                 <Link :href="route('item.edit',item.id)" class="text-sm text-theme font-bold">Update Items</Link>
             </div>
 
@@ -191,7 +176,7 @@ const submit = () => {
                                 <InputLabel for="image" value="Item Photo" />
                                 <span class="text-red-500 translate-y-1 text-lg">*</span>
                             </div>
-                            <p class="text-gray-600 text-xs">Recommended Size 400 x 200</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-xs">Recommended Size 400 x 200</p>
                             <!-- drag and drop -->
                              <input id="image" @change="handleFileChange" class="mt-3 hidden" type="file" />
                             <InputError class="-mt-1" :message="form.errors.image" />
@@ -240,13 +225,11 @@ const submit = () => {
                             <LocationPicker v-model="form.address" />
                             <InputError class="-mt-1" :message="form.errors.address" />
                         </div>
-
-                        <!-- <LocationPicker/> -->
                     </div>
                 </div>
 
                 <div class="flex justify-end items-center gap-6 mr-5 mt-7 pe-12">
-                    <Link :href="route('dashboard')" class="px-10 py-[6px] rounded hover:bg-secondary_bg active:scale-[0.95] duration-300">Cancel</Link>
+                    <Link :href="route('dashboard')" class="px-10 py-[6px] rounded hover:bg-gray-300 active:scale-[0.95] duration-300 bg-secondary_bg text-gray-700 dark:text-gray-300">Cancel</Link>
                     <button @click="submit" type="submit" class="bg-theme text-white px-10 py-[6px] rounded active:scale-[0.95] duration-300">Update</button>
                 </div>
              </form>
