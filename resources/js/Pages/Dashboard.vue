@@ -5,6 +5,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import AddButton from '@/Components/AddButton.vue';
 import EditButton from '@/Components/EditButton.vue';
 import DeleteButton from '@/Components/DeleteButton.vue';
+import NoData from '@/Components/NoData.vue';
 import ChevronDown from '@/Components/icons/ChevronDown.vue';
 import Trash from '@/Components/icons/Trash.vue';
 
@@ -151,7 +152,7 @@ const parentOnDelete = (event) => {
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="text-primary_text text-[14.5px]">
+                    <tbody v-if="itemsData.data.length > 0" class="text-primary_text text-[14.5px]">
                         <tr v-for="(item,index) in itemsData.data" :key="item.id" class="border-b border-slate-300 dark:border-slate-600">
                             <td class="ps-12 pe-3 py-3">
                                 <div>
@@ -187,10 +188,13 @@ const parentOnDelete = (event) => {
                         </tr>
                     </tbody>
                 </table>
+                <div v-if="itemsData.data.length < 1">
+                    <NoData />
+                </div>
             </div>
 
             <!-- pagination -->
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 pb-12 pe-3 md:px-5 lg:px-8">
+            <div v-if="itemsData.data.length > 0" class="flex flex-col md:flex-row justify-between items-center gap-4 pb-12 pe-3 md:px-5 lg:px-8">
                 <div class="text-gray-600 dark:text-gray-400 text-[15px]">
                      Showing {{ itemsData.from }} to {{ itemsData.to }} of {{ itemsData.total }} entries
                 </div>

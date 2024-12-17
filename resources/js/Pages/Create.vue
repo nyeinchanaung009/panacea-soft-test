@@ -3,10 +3,10 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import {Link,useForm } from '@inertiajs/vue3';
 import ChevronRight from '@/Components/icons/ChevronRight.vue';
 // import TextEditor from '@/Components/TextEditor.vue';
+import LocationPicker from '@/Components/LocationPicker.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-// import LocationPicker from '@/Components/LocationPicker.vue';
 
 defineProps({
     categories: Object,
@@ -16,7 +16,7 @@ const form = useForm({
     name: '',
     category_id: '',
     price: null,
-    description: ' ',
+    description: '',
     condition: '',
     type: '',
     is_publish: true,
@@ -32,7 +32,6 @@ const handleFileChange = (event) => {
 
 
 const submit = () => {
-    // console.log(form);
     form.post(route('item.store'), {
         forceFormData: true,
         onSuccess: () => {
@@ -51,7 +50,7 @@ const submit = () => {
         <div class="mt-3 pt-4 px-2 md:px-4">
             <!-- breadcrumb -->
             <div class="flex gap-3 items-center">
-                <Link :href="route('dashboard')" class="text-sm text-gray-600 dark:text-gray-400 font-bold">Items List</Link>
+                <Link :href="route('dashboard')" class="text-sm text-gray-600 font-bold">Items List</Link>
                 <ChevronRight class="text-sm" />
                 <Link :href="route('item.create')" class="text-sm text-theme font-bold">Add Items</Link>
             </div>
@@ -121,7 +120,8 @@ const submit = () => {
                                 <span class="text-red-500 translate-y-1 text-lg">*</span>
                             </div>
                             <textarea v-model="form.description" class="w-full border-gray-300 rounded" rows="3"></textarea>
-                            <!-- <TextEditor class="bg-white rounded p-3 h-[25px] mt-1" /> -->
+                            <!-- <TextEditor v-model="form.description" /> -->
+                            <!-- class="bg-white rounded p-3 h-[25px] mt-1" -->
                             <InputError class="-mt-1" :message="form.errors.description" />
                         </div>
 
@@ -168,7 +168,7 @@ const submit = () => {
                                 <InputLabel for="image" value="Item Photo" />
                                 <span class="text-red-500 translate-y-1 text-lg">*</span>
                             </div>
-                            <p class="text-gray-600 dark:text-gray-400 text-xs">Recommended Size 400 x 200</p>
+                            <p class="text-gray-600 text-xs">Recommended Size 400 x 200</p>
                             <!-- drag and drop -->
                              <input @change="handleFileChange" class="mt-3" type="file" />
                             <InputError class="-mt-1" :message="form.errors.image" />
@@ -195,7 +195,7 @@ const submit = () => {
                             <InputError class="-mt-1" :message="form.errors.owner" />
                         </div>
 
-                        <!-- address -->
+                        <!-- contact number -->
                         <div class="mt-5 w-[95%] md:w-10/12 lg:w-9/12">
                             <InputLabel for="phone" value="Contact Number" />
                             <TextInput
@@ -212,7 +212,7 @@ const submit = () => {
                         <!-- address -->
                         <div class="mt-5 w-[95%] md:w-10/12 lg:w-9/12">
                             <InputLabel for="address" value="Address" />
-                            <textarea v-model="form.address" class="w-full border-gray-300 rounded" rows="3"></textarea>
+                            <LocationPicker v-model="form.address" />
                             <InputError class="-mt-1" :message="form.errors.address" />
                         </div>
 
